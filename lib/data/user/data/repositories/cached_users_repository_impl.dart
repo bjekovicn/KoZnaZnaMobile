@@ -41,4 +41,37 @@ class CachedUsersRepositoryImpl implements UsersRepository {
   Future<Either<Failure, void>> challengeUser(int userId, String roomId) {
     return _repository.challengeUser(userId, roomId);
   }
+
+  @override
+  Future<Either<Failure, List<UserEntity>>> getFriends() async {
+    final apiResult = await _repository.getFriends();
+    return apiResult.fold(
+      (Failure failure) async {
+        final cachedRankings = await _storage.getCachedFriends();
+        if (cachedRankings == null) return Left(failure);
+
+        final userEntityList = cachedRankings.map((userModel) {
+          return userModel.mapToEntity();
+        }).toList();
+        return Right(userEntityList);
+      },
+      (List<UserEntity> data) async {
+        final userModelsList = data.map((userEntity) {
+          return userEntity.mapToModel();
+        }).toList();
+        await _storage.cacheFriends(userModelsList);
+        return Right(data);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, void>> addFriend(int receiverId) {
+    return _repository.addFriend(receiverId);
+  }
+
+  @override
+  Future<Either<Failure, void>> removeFriend(int receiverId) {
+    return _repository.removeFriend(receiverId);
+  }
 }

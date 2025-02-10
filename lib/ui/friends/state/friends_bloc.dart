@@ -5,14 +5,14 @@ import 'package:injectable/injectable.dart';
 import 'friends_event.dart';
 import '/core/error_handling/failure.dart';
 import '/ui/friends/state/friends_state.dart';
-import '/data/friendships/domain/repositories/friendships_repository.dart';
+import '/data/user/domain/repositories/users_repository.dart';
 
 @injectable
 class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
-  final FriendshipsRepository _repository;
+  final UsersRepository _repository;
 
   FriendsBloc(
-    @Named('CachedFriendshipsRepository') this._repository,
+    @Named('CachedUsersRepository') this._repository,
   ) : super(const FriendshipsStateIdle()) {
     on<GetFriendsEvent>(_onGetFriends);
   }

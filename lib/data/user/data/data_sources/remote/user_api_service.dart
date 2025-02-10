@@ -20,4 +20,15 @@ abstract class UserApiService {
     @Path("userId") int userId,
     @Body() Map<String, dynamic> body,
   );
+
+  //
+
+  @GET('/friendships/accepted')
+  Future<HttpResponse<List<UserModel>>> getFriends();
+
+  @POST('/friendships/{id}/add')
+  Future<HttpResponse<void>> addFriend(@Path("id") int receiverId);
+
+  @DELETE('/friendships/{id}/remove')
+  Future<HttpResponse<void>> removeFriend(@Path("id") int receiverId);
 }

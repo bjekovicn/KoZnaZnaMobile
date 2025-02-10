@@ -33,4 +33,37 @@ class UsersRepositoryImpl implements UsersRepository {
       return Left(Failure.handle(exception));
     }
   }
+
+  @override
+  Future<Either<Failure, List<UserEntity>>> getFriends() async {
+    try {
+      final res = await _apiService.getFriends();
+      final userEntities = res.data.map((user) {
+        return user.mapToEntity();
+      }).toList();
+      return Right(userEntities);
+    } catch (exception) {
+      return Left(Failure.handle(exception));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addFriend(int receiverId) async {
+    try {
+      await _apiService.addFriend(receiverId);
+      return const Right(null);
+    } catch (exception) {
+      return Left(Failure.handle(exception));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> removeFriend(int receiverId) async {
+    try {
+      await _apiService.removeFriend(receiverId);
+      return const Right(null);
+    } catch (exception) {
+      return Left(Failure.handle(exception));
+    }
+  }
 }
